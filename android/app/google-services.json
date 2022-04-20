@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1074426726450",
+    "project_id": "self-drive-car-f27a3",
+    "storage_bucket": "self-drive-car-f27a3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1074426726450:android:ac6d6bde6d8a714cef142b",
+        "android_client_info": {
+          "package_name": "com.example.smart_delivery_car"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1074426726450-1bj4qd31ack8l2ril9jmfakvdsrjvvjq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCcpLKhAxuO1uXzfkcJxexm_re-weO1Cwg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1074426726450-1bj4qd31ack8l2ril9jmfakvdsrjvvjq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
