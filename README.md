@@ -1,6 +1,13 @@
 # smart_delivery_car
 
-A new Flutter project.
+A new Flutter project.Application that have two sides employee side to review the orders and prepare it to put it in the car and the client side clients can order and select the location they want on the map 
+used  : 
+- FireBase 
+- Cubit / Provider
+- Google Maps Api " places , directios "
+- Qr Generator 
+
+ 
 
 Application that have two sides employee side to review the orders and prepare it to put it in the car and the client side clients can order and select the location they want on the map 
 
