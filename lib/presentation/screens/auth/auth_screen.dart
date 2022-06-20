@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:smart_delivery_car/constants/colors.dart';
 import 'package:smart_delivery_car/constants/strings.dart';
 import '../../widgets/auth/auth_form.dart';
 
@@ -24,6 +25,7 @@ class _AuthScreenState extends State<AuthScreen> {
     bool isLogin,
     BuildContext context,
   ) async {
+    // ignore: unused_local_variable
     UserCredential authResult;
     try {
       setState(() {
@@ -39,16 +41,12 @@ class _AuthScreenState extends State<AuthScreen> {
           email: email,
           password: password,
         );
+        await FirebaseFirestore.instance.collection('users').doc(password).set({
+          'username': username,
+          'email': email,
+          'isAdmin': isAdmin,
+        });
       }
-
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(authResult.user!.uid)
-          .set({
-        'username': username,
-        'email': email,
-        'isAdmin': isAdmin,
-      });
     } catch (err) {
       print(err);
       ScaffoldMessenger.of(context).showSnackBar(
@@ -61,6 +59,7 @@ class _AuthScreenState extends State<AuthScreen> {
         _isLoading = false;
       });
     }
+
     if (isAdmin) {
       Navigator.pushReplacementNamed(context, homeScreen);
     } else if (!isAdmin) {
@@ -71,7 +70,7 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
+      backgroundColor: focusColorInTextField,
       body: AuthForm(
         sumbitFn: _sumbitAuthForm,
         isLoading: _isLoading,

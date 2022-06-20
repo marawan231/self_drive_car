@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:smart_delivery_car/presentation/screens/admin/completed_orders_screen.dart';
-import 'package:smart_delivery_car/presentation/screens/admin/employee_home_screen.dart';
+
+import 'completed_orders_screen.dart';
+import 'employee_home_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -11,8 +12,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
     EmployeeHomeScreen(),
     CompletedOrderScreen(),
@@ -29,6 +28,8 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.white,
+        elevation: 0.0,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),

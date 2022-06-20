@@ -1,128 +1,99 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_delivery_car/data/model/order.dart';
-import 'package:smart_delivery_car/presentation/widgets/client/default_form_field.dart';
-import '../../../constants/strings.dart';
+import 'package:flutter/services.dart';
+import 'package:lottie/lottie.dart';
+import 'package:smart_delivery_car/constants/strings.dart';
+
+import '../../../constants/colors.dart';
 import '../../../constants/styles.dart';
 
-class ClientHomeScreen extends StatefulWidget {
+class ClientHomeScreen extends StatelessWidget {
   const ClientHomeScreen({Key? key}) : super(key: key);
 
-  @override
-  State<ClientHomeScreen> createState() => _ClientHomeScreenState();
-}
-
-class _ClientHomeScreenState extends State<ClientHomeScreen> {
-  final TextEditingController titleControler = TextEditingController();
-  final TextEditingController quantityController = TextEditingController();
-  final auth = FirebaseAuth.instance;
-
-  @override
-  void dispose() {
-    super.dispose();
-    titleControler.dispose();
-    quantityController.dispose();
+  buildBody(context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        buildCentreText(),
+        buildButtons(context),
+      ],
+    );
   }
 
-  buildAppBar(context) {
-    return AppBar(
-      title: const Text('clientHomeScreen'),
-      actions: [
+  buildButtons(context) {
+    return Column(
+      children: [
         TextButton(
-          onPressed: () {
-            FirebaseAuth.instance.signOut();
-            Navigator.pushReplacementNamed(context, authScreen);
-          },
+          style: TextButton.styleFrom(
+            backgroundColor: onBoardingTextButtonColor,
+          ),
           child: const Text(
-            'log out',
-            style: TextStyle(
-              color: Colors.white,
-            ),
+            'Select Location from Global map ',
+            style: textInTextButtonStyle,
+          ),
+          onPressed: () {
+            Navigator.pushNamed(context, mapsScreen);
+          },
+        ),
+        TextButton(
+          style: TextButton.styleFrom(
+            backgroundColor: onBoardingTextButtonColor,
+          ),
+          child: const Text(
+            'Select Location from local map ',
+            style: textInTextButtonStyle,
+          ),
+          onPressed: () {
+            // todo : local map screen create.
+          },
+        ),
+      ],
+    );
+  }
+
+  buildCentreText() {
+    return Column(
+      // mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SizedBox(
+            width: 400,
+            height: 250,
+            child: Lottie.asset('assets/images/waiting.json')),
+        const Text(
+          'Why waiting ?',
+          style: TextStyle(
+            color: Color(0xFF5A6A8D),
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        const Text(
+          'Order easily at any time\n- pick a drop point \n- wait for our smart car\n to drop your order',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w300,
+            color: Color.fromARGB(255, 90, 106, 141),
           ),
         ),
       ],
     );
   }
 
-  buildTheFormFieldsOfOrderAndQuantity() {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          DefaultFormField(
-            controller: titleControler,
-            isPassword: false,
-            hintText: 'please enter your order here',
-            labelText: 'order',
-            textInputType: TextInputType.text,
-            prefixcIcon: Icons.title,
-          ),
-          const SizedBox(
-            height: 30,
-          ),
-          DefaultFormField(
-            controller: quantityController,
-            isPassword: false,
-            hintText: 'please enter your quantity here',
-            labelText: 'quantity',
-            textInputType: TextInputType.number,
-            prefixcIcon: Icons.numbers,
-          ),
-          const SizedBox(
-            height: 30,
-          ),
-          Center(
-              child: TextButton(
-            style: textButtonStyle,
-            child: const Text(
-              'Order',
-              style: textInTextButtonStyle,
-            ),
-            onPressed: () {
-              sendOrderToFireBase();
-              clearFields();
-              showSnackBar();
-            },
-          )),
-        ],
-      ),
-    );
-  }
-
-  Future<void> sendOrderToFireBase() async {
-    final docOrder = FirebaseFirestore.instance.collection('orders').doc();
-
-    final newOrder = Order(
-      isDone: false,
-      id: docOrder.id,
-      title: titleControler.text,
-      quantity: quantityController.text,
-    ).toJson();
-
-    await docOrder.set(newOrder);
-  }
-
-  void clearFields() {
-    titleControler.clear();
-    quantityController.clear();
-  }
-
-  showSnackBar() {
-    return ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("Order  is Ordered Successfully "),
-        backgroundColor: Colors.green,
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBar(context),
-      body: buildTheFormFieldsOfOrderAndQuantity(),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        systemOverlayStyle:
+            const SystemUiOverlayStyle(statusBarColor: Colors.white),
+        backgroundColor: Colors.white,
+        elevation: 0.0,
+      ),
+      body: buildBody(context),
     );
   }
 }

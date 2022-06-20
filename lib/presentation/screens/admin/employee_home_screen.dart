@@ -2,22 +2,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
-import 'package:smart_delivery_car/business_logic/cubit/cubit/orders_cubit.dart';
 
-import 'package:smart_delivery_car/constants/strings.dart';
-import 'package:smart_delivery_car/data/model/order.dart';
-import 'package:smart_delivery_car/presentation/widgets/client/order_tile.dart';
+import '../../../constants/strings.dart';
+import '../../../data/model/order.dart';
+import '../../widgets/client/order_tile.dart';
 
+import '../../../business_logic/cubit/orders/orders_cubit.dart';
 import '../../../constants/styles.dart';
-import '../../widgets/admin/bottom_nav_bar.dart';
-import 'completed_orders_screen.dart';
 
 class EmployeeHomeScreen extends StatelessWidget {
   const EmployeeHomeScreen({Key? key}) : super(key: key);
 
   buildAppBar(context) {
     return AppBar(
+      backgroundColor: Colors.blueAccent,
       title: const Text('employyee Home Screen'),
       actions: [
         TextButton(
@@ -25,37 +23,31 @@ class EmployeeHomeScreen extends StatelessWidget {
             FirebaseAuth.instance.signOut();
             Navigator.pushReplacementNamed(context, authScreen);
           },
-          child: const Text(
-            'log out',
-            style: TextStyle(
-              color: Colors.white,
-            ),
+          child: Row(
+            children: const [
+              Text(
+                'log out',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              SizedBox(
+                width: 5,
+              ),
+              Icon(
+                Icons.exit_to_app,
+                color: Colors.white,
+              ),
+            ],
           ),
         ),
       ],
     );
   }
 
-  // Widget buildOrders(Order order) => BlocConsumer<OrdersCubit, OrdersState>(
-  //       listener: (context, state) {},
-  //       builder: (context, state) {
-  //         return OrderTile(
-  //           taskText: '${order.quantity}   ${order.title}',
-  //           isChecked: order.isDone,
-  //           onChangedTask: (checkBoxState) {
-  //             BlocProvider.of<OrdersCubit>(context).updateTask(order);
-  //             print(checkBoxState.toString());
-  //           },
-  //           onDelete: () {},
-  //         );
-  //       },
-  //     );
-
   buildStreamOfOrders() {
     return BlocConsumer<OrdersCubit, OrdersState>(
-      listener: (context, state) {
-        // TODO: implement listener
-      },
+      listener: (context, state) {},
       builder: (context, state) {
         return StreamBuilder<List<Order>>(
           stream: readOrders(),
@@ -75,7 +67,6 @@ class EmployeeHomeScreen extends StatelessWidget {
                         onChangedTask: (checkBoxState) {
                           BlocProvider.of<OrdersCubit>(context)
                               .updateTask(order);
-                          print(checkBoxState.toString());
                         },
                         onDelete: () {},
                       ),
@@ -153,9 +144,7 @@ class EmployeeHomeScreen extends StatelessWidget {
       backgroundColor: Colors.blueAccent,
       appBar: buildAppBar(context),
       body: BlocConsumer<OrdersCubit, OrdersState>(
-        listener: (context, state) {
-          // TODO: implement listener
-        },
+        listener: (context, state) {},
         builder: (context, state) {
           return builfBody(context);
         },

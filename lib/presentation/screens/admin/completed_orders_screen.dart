@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:smart_delivery_car/business_logic/cubit/cubit/orders_cubit.dart';
-import 'package:smart_delivery_car/data/model/order.dart';
-import 'package:smart_delivery_car/presentation/widgets/client/order_tile.dart';
+import '../../../data/model/order.dart';
+import '../../widgets/client/order_tile.dart';
 
+import '../../../business_logic/cubit/orders/orders_cubit.dart';
 import '../../../constants/styles.dart';
 
 class CompletedOrderScreen extends StatefulWidget {
@@ -82,7 +82,6 @@ class _CompletedOrderScreenState extends State<CompletedOrderScreen> {
           onChangedTask: (checkBoxState) {
             BlocProvider.of<OrdersCubit>(context)
                 .updateTask(completedOrder[index]);
-            print(checkBoxState.toString());
           },
           onDelete: () {},
         );
@@ -95,6 +94,7 @@ class _CompletedOrderScreenState extends State<CompletedOrderScreen> {
     return Scaffold(
       backgroundColor: Colors.blueAccent,
       appBar: AppBar(
+        backgroundColor: Colors.blueAccent,
         title: const Text('Completed Orders'),
       ),
       body: BlocConsumer<OrdersCubit, OrdersState>(

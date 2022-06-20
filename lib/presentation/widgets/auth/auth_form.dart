@@ -1,6 +1,8 @@
 // ignore_for_file: avoid_print
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:smart_delivery_car/constants/colors.dart';
 
 class AuthForm extends StatefulWidget {
   const AuthForm({Key? key, required this.sumbitFn, this.isLoading})
@@ -28,13 +30,27 @@ class _AuthFormState extends State<AuthForm> {
   String _userPassword = '';
   bool? _isAdmin;
   String? type;
+  String pass = '';
 
-  void _trySumbit() {
+  void _trySumbit() async {
     final isValid = _formKey.currentState!.validate();
     FocusScope.of(context).unfocus();
 
     if (isValid) {
       _formKey.currentState!.save();
+
+      if (_isLogin) {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(_userPassword)
+            .get()
+            .then((value) {
+          Map data = value.data() as Map;
+          print(data['isAdmin']);
+          _isAdmin = data['isAdmin'];
+        });
+      }
+
       widget.sumbitFn(
         _userEmail.trim(),
         _username.trim(),
@@ -44,6 +60,44 @@ class _AuthFormState extends State<AuthForm> {
         context,
       );
     }
+  }
+
+  buildChooseAdminOrClientWidget() {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Expanded(
+          flex: 1,
+          child: ListTile(
+            title: const Text("employe"),
+            leading: Radio(
+                value: "employe",
+                groupValue: type,
+                onChanged: (value) {
+                  setState(() {
+                    type = value.toString();
+                    _isAdmin = true;
+                  });
+                }),
+          ),
+        ),
+        Expanded(
+          flex: 1,
+          child: ListTile(
+            title: const Text("client"),
+            leading: Radio(
+                value: "client",
+                groupValue: type,
+                onChanged: (value) {
+                  setState(() {
+                    type = value.toString();
+                    _isAdmin = false;
+                  });
+                }),
+          ),
+        ),
+      ],
+    );
   }
 
   @override
@@ -59,41 +113,7 @@ class _AuthFormState extends State<AuthForm> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: ListTile(
-                          title: const Text("employe"),
-                          leading: Radio(
-                              value: "employe",
-                              groupValue: type,
-                              onChanged: (value) {
-                                setState(() {
-                                  type = value.toString();
-                                  _isAdmin = true;
-                                });
-                              }),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: ListTile(
-                          title: const Text("client"),
-                          leading: Radio(
-                              value: "client",
-                              groupValue: type,
-                              onChanged: (value) {
-                                setState(() {
-                                  type = value.toString();
-                                  _isAdmin = false;
-                                });
-                              }),
-                        ),
-                      ),
-                    ],
-                  ),
+                  if (!_isLogin) buildChooseAdminOrClientWidget(),
                   TextFormField(
                     key: const ValueKey('email'),
                     validator: ((value) {
@@ -126,14 +146,12 @@ class _AuthFormState extends State<AuthForm> {
                     ),
                   TextFormField(
                     key: const ValueKey('password'),
-                    validator: ((value) {
-                      if (value!.isEmpty || value.length < 7) {
-                        return ' Password must be 7 characters long';
-                      }
-                      return null;
-                    }),
                     decoration: const InputDecoration(labelText: 'Password'),
                     obscureText: true,
+                    onChanged: (value) {
+                      pass = value;
+                      print(pass);
+                    },
                     onSaved: (value) {
                       _userPassword = value!;
                     },
@@ -146,7 +164,7 @@ class _AuthFormState extends State<AuthForm> {
                     TextButton(
                       style: TextButton.styleFrom(
                         padding: const EdgeInsets.symmetric(horizontal: 30),
-                        backgroundColor: Colors.pink,
+                        backgroundColor: onBoardingTextButtonColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
@@ -160,10 +178,10 @@ class _AuthFormState extends State<AuthForm> {
                       onPressed: _trySumbit,
                     ),
                   TextButton(
-                    child: const Text(
-                      'Create new account',
-                      style: TextStyle(
-                        color: Colors.pink,
+                    child: Text(
+                      _isLogin ? 'Create new account' : 'Log In',
+                      style: const TextStyle(
+                        color: onBoardingTextColor,
                       ),
                     ),
                     onPressed: () {
