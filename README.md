@@ -2,6 +2,8 @@
 
 A new Flutter project.
 
+Application that have two sides employee side to review the orders and prepare it to put it in the car and the client side clients can order and select the location they want on the map 
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
